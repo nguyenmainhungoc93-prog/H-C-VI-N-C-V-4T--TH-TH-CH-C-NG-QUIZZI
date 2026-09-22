@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Viện Đặc Vụ - Thử Thách Phản Xạ 4T</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.85);
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-amber: #f59e0b;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --text-light: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-glow: rgba(6, 182, 212, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 10%, #1e293b, #0f172a, #020617);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Animated Grid Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Container Card */
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                        0 0 30px rgba(6, 182, 212, 0.15);
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Welcome Screen */
+        .badge-header {
+            display: inline-flex;
+            align-items:center;
+            gap: 10px;
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 38px;
+            font-weight: 900;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff, #67e8f9, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 28px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-bottom: 10px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #06b6d4, #2563eb);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(6, 182, 212, 0.6);
+        }
+
+        /* Quiz Header */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-box {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-sub);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stat-val {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--accent-cyan);
+        }
+
+        /* Progress & Timer */
+        .progress-wrapper {
+            margin-bottom: 24px;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #06b6d4, #10b981);
+            transition: width 0.4s ease;
+        }
+
+        /* Question Box */
+        .category-tag {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.15);
+            padding: 4px 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.5;
+            color: #fff;
+            margin-bottom: 28px;
+        }
+
+        /* Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .option-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .option-card:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.08);
+            transform: translateX(4px);
+        }
+
+        .option-key {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--accent-cyan);
+            flex-shrink: 0;
+        }
+
+        .option-text {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #e2e8f0;
+        }
+
+        /* Option Feedback States */
+        .option-card.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(16, 185, 129, 0.2) !important;
+        }
+
+        .option-card.correct .option-key {
+            background: var(--accent-green);
+            color: #fff;
+        }
+
+        .option-card.wrong {
+            border-color: var(--accent-red) !important;
+            background: rgba(239, 68, 68, 0.2) !important;
+        }
+
+        .option-card.wrong .option-key {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        .option-card.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+
+        .explanation-box strong {
+            color: var(--accent-cyan);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Victory Screen */
+        .result-card {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .trophy-icon {
+            font-size: 64px;
+            color: var(--accent-amber);
+            margin-bottom: 16px;
+            animation: bounce 1.5s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--accent-cyan);
+            margin: 12px 0;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .exit-ticket {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 28px;
+        }
+
+        .exit-ticket-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-amber);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .exit-ticket-list {
+            list-style: none;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-sub);
+        }
+
+        .exit-ticket-list li i {
+            color: var(--accent-green);
+            margin-right: 8px;
+        }
+
+        /* Sound Toggle */
+        .sound-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .sound-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 640px) {
+            .app-container { padding: 24px; }
+            .title { font-size: 28px; }
+            .question-text { font-size: 17px; }
+            .stats-bar { gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+
+    <div class="app-container">
+        <button class="sound-btn" id="soundToggle" title="Bật/Tắt Âm thanh">
+            <i class="fa-solid fa-volume-high"></i>
+        </button>
+
+        <!-- SCREEN 1: WELCOME -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="badge-header">
+                <i class="fa-solid fa-shield-halved"></i> Trạm Luyện Tập Phản Xạ
+            </div>
+            <h1 class="title">HỌC VIỆN ĐẶC VỤ 4T</h1>
+            <p class="subtitle">Thử thách 6 tình huống thực tế về Phòng, chống Ma túy dành cho Học sinh THPT. Nhận diện nguy cơ & kích hoạt kĩ năng bảo vệ an toàn!</p>
+            
+            <div class="input-group">
+                <label class="input-label" for="agentName">Mật danh / Tên Đội đặc nhiệm:</label>
+                <input type="text" id="agentName" class="input-field" placeholder="Ví dụ: Đặc vụ Lớp 11A1 / Nguyễn Văn A..." maxlength="30" value="Đặc vụ An Toàn">
+            </div>
+
+            <button class="btn-primary" id="startBtn">
+                <i class="fa-solid fa-play"></i> BẮT ĐẦU THỬ THÁCH
+            </button>
+        </div>
+
+        <!-- SCREEN 2: QUIZ QUESTION -->
+        <div class="screen" id="quizScreen">
+            <div class="quiz-header">
+                <div class="agent-info">
+                    <div class="avatar-icon"><i class="fa-solid fa-user-ninja"></i></div>
+                    <div>
+                        <div style="font-size: 12px; color: var(--text-sub);">ĐẶC VỤ</div>
+                        <div style="font-weight: 700; font-size: 15px;" id="displayName">--</div>
+                    </div>
+                </div>
+                <div class="stats-bar">
+                    <div class="stat-box">
+                        <div class="stat-label">Điểm số</div>
+                        <div class="stat-val" id="scoreVal">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Thời gian</div>
+                        <div class="stat-val" id="timerVal">20s</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-wrapper">
+                <div class="progress-meta">
+                    <span id="progressText">Câu hỏi 1 / 6</span>
+                    <span id="percentText">16%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="category-tag" id="categoryTag">NỘI DUNG</div>
+            <div class="question-text" id="questionText">Nội dung câu hỏi...</div>
+
+            <div class="options-grid" id="optionsGrid"></div>
+
+            <div class="explanation-box" id="explanationBox">
+                <strong><i class="fa-solid fa-circle-info"></i> Giải mã Đặc vụ:</strong>
+                <span id="explanationText"></span>
+            </div>
+
+            <button class="btn-primary" id="nextBtn" style="display: none;">
+                TIẾP TỤC <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- SCREEN 3: RESULT -->
+        <div class="screen" id="resultScreen">
+            <div class="result-card">
+                <div class="trophy-icon"><i class="fa-solid fa-award"></i></div>
+                <h2 style="font-size: 28px; font-weight: 800;">HOÀN THÀNH NHIỆM VỤ!</h2>
+                <p style="color: var(--text-sub); margin-top: 6px;" id="resultAgentName">Đặc vụ An Toàn</p>
+                
+                <div class="score-display" id="finalScoreDisplay">100 / 100</div>
+                <div class="rank-badge" id="rankBadge">ĐẶC VỤ XUẤT SẮC</div>
+
+                <div class="exit-ticket">
+                    <div class="exit-ticket-title"><i class="fa-solid fa-ticket"></i> VÉ RA KHỎI LỚP (EXIT TICKET)</div>
+                    <ul class="exit-ticket-list">
+                        <li><i class="fa-solid fa-check-double"></i> Đã thuộc quy tắc <strong>4T An toàn</strong> (Từ chối - Thoát khỏi - Tránh giữ - Thông báo).</li>
+                        <li><i class="fa-solid fa-check-double"></i> Nhận diện ma túy núp bóng & không nhận giữ đồ lạ.</li>
+                        <li><i class="fa-solid fa-check-double"></i> Sẵn sàng lan tỏa thông điệp <strong>15 giây an toàn</strong> trên môi trường số.</li>
+                    </ul>
+                </div>
+
+                <button class="btn-primary" id="restartBtn">
+                    <i class="fa-solid fa-rotate-right"></i> THỰC HÀNH LẠI
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // QUIZ DATA
+        const quizData = [
+            {
+                id: 1,
+                category: "Nhận diện nguy cơ",
+                question: "Một người rủ em thử một đồ uống không rõ nguồn gốc và nói: “Chỉ một lần thôi!”. Em nên:",
+                options: [
+                    "Thử một ngụm để biết.",
+                    "Từ chối, rời khỏi tình huống và báo người lớn đáng tin cậy.",
+                    "Cầm về nhà rồi mới quyết định.",
+                    "Đăng lên mạng hỏi mọi người đó là gì."
+                ],
+                correctIndex: 1,
+                explanation: "Lập tức áp dụng kĩ năng phản xạ 4T: Từ chối kiên quyết, rời đi ngay và thông báo người có trách nhiệm."
+            },
+            {
+                id: 2,
+                category: "Nhớ đúng 4T",
+                question: "Lựa chọn nào sau đây KHÔNG thuộc quy tắc 4T?",
+                options: [
+                    "Từ chối.",
+                    "Thử nghiệm.",
+                    "Thoát khỏi.",
+                    "Thông báo."
+                ],
+                correctIndex: 1,
+                explanation: "Quy tắc 4T gồm: T1 - Từ chối, T2 - Thoát khỏi, T3 - Tránh giữ, T4 - Thông báo. 'Thử nghiệm' hoàn toàn bị nghiêm cấm!"
+            },
+            {
+                id: 3,
+                category: "Ma túy núp bóng / Vật lạ",
+                question: "Bạn nhờ em cầm hộ một gói kín nhưng không nói bên trong là gì. Em nên:",
+                options: [
+                    "Nhận vì là bạn thân.",
+                    "Mở ra kiểm tra.",
+                    "Từ chối nhận và không tự ý kiểm tra bên trong.",
+                    "Chuyển cho một bạn khác giữ."
+                ],
+                correctIndex: 2,
+                explanation: "Không nhận hay giữ hộ vật thể không rõ nguồn gốc, tránh nguy cơ trở thành đồng phạm vận chuyển trái phép."
+            },
+            {
+                id: 4,
+                category: "Năng lực số",
+                question: "Một bài đăng quảng cáo sản phẩm “giúp hưng phấn, không gây hại 100%”. Em nên:",
+                options: [
+                    "Tin vì có nhiều lượt thích.",
+                    "Mua thử loại rẻ nhất.",
+                    "Chia sẻ ngay cho bạn bè.",
+                    "Cảnh giác, không sử dụng và kiểm tra thông tin từ nguồn chính thống."
+                ],
+                correctIndex: 3,
+                explanation: "Sử dụng năng lực số để chủ động lọc tin giả, không nghe theo lời quảng cáo sai sự thật trên không gian mạng."
+            },
+            {
+                id: 5,
+                category: "Xử lý với bạn bè",
+                question: "Một bạn tâm sự đang bị ép thử một chất lạ. Cách hỗ trợ phù hợp là:",
+                options: [
+                    "Chế giễu để bạn sợ.",
+                    "Giữ bí mật tuyệt đối dù bạn đang gặp nguy hiểm.",
+                    "Lắng nghe, giúp bạn rời khỏi nguy cơ và cùng báo người lớn đáng tin cậy.",
+                    "Tự tìm nhóm người rủ rê để đối chất."
+                ],
+                correctIndex: 2,
+                explanation: "Sự hỗ trợ văn minh là lắng nghe không kỳ thị, giúp bạn thoát khỏi nơi nguy hiểm và tìm sự giúp đỡ từ người lớn."
+            },
+            {
+                id: 6,
+                category: "Vận dụng môi trường số",
+                question: "Khi đăng nội dung tuyên truyền phòng, chống ma túy trên mạng, lựa chọn nào phù hợp nhất?",
+                options: [
+                    "Dùng thông tin đã kiểm chứng, ngôn ngữ tích cực và không công khai thông tin cá nhân của người khác.",
+                    "Đăng tên người bị nghi ngờ để mọi người cảnh giác.",
+                    "Dùng hình ảnh gây sốc để thu hút lượt xem.",
+                    "Sao chép nội dung do AI tạo ra mà không kiểm tra."
+                ],
+                correctIndex: 0,
+                explanation: "Sử dụng thông tin chuẩn xác, tôn trọng quyền riêng tư và phát tán thông điệp tích cực là quy chuẩn truyền thông an toàn."
+            }
+        ];
+
+        // STATE VARIABLES
+        let currentQuestion = 0;
+        let score = 0;
+        let timer = null;
+        let timeLeft = 20;
+        let soundEnabled = true;
+
+        // AUDIO SYNTHESIS
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (!soundEnabled) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } else if (type === 'wrong') {
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.setValueAtTime(164.81, audioCtx.currentTime + 0.1); // E3
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            }
+        }
+
+        // DOM ELEMENTS
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultScreen = document.getElementById('resultScreen');
+
+        const agentNameInput = document.getElementById('agentName');
+        const startBtn = document.getElementById('startBtn');
+        const displayName = document.getElementById('displayName');
+        const scoreVal = document.getElementById('scoreVal');
+        const timerVal = document.getElementById('timerVal');
+
+        const progressText = document.getElementById('progressText');
+        const percentText = document.getElementById('percentText');
+        const progressFill = document.getElementById('progressFill');
+
+        const categoryTag = document.getElementById('categoryTag');
+        const questionText = document.getElementById('questionText');
+        const optionsGrid = document.getElementById('optionsGrid');
+        const explanationBox = document.getElementById('explanationBox');
+        const explanationText = document.getElementById('explanationText');
+        const nextBtn = document.getElementById('nextBtn');
+
+        const resultAgentName = document.getElementById('resultAgentName');
+        const finalScoreDisplay = document.getElementById('finalScoreDisplay');
+        const rankBadge = document.getElementById('rankBadge');
+        const restartBtn = document.getElementById('restartBtn');
+        const soundToggle = document.getElementById('soundToggle');
+
+        // SOUND TOGGLE
+        soundToggle.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundToggle.innerHTML = soundEnabled ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
+        });
+
+        // START GAME
+        startBtn.addEventListener('click', () => {
+            const name = agentNameInput.value.trim() || 'Đặc vụ An Toàn';
+            displayName.textContent = name;
+            resultAgentName.textContent = name;
+
+            welcomeScreen.classList.remove('active');
+            quizScreen.classList.add('active');
+
+            currentQuestion = 0;
+            score = 0;
+            scoreVal.textContent = '0';
+            loadQuestion();
+        });
+
+        // TIMER FUNCTION
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 20;
+            timerVal.textContent = `${timeLeft}s`;
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                timerVal.textContent = `${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        // LOAD QUESTION
+        function loadQuestion() {
+            startTimer();
+            const q = quizData[currentQuestion];
+
+            categoryTag.textContent = q.category.toUpperCase();
+            questionText.textContent = q.question;
+
+            // Progress
+            const currentNum = currentQuestion + 1;
+            const total = quizData.length;
+            const pct = Math.round((currentNum / total) * 100);
+            
+            progressText.textContent = `Câu hỏi ${currentNum} / ${total}`;
+            percentText.textContent = `${pct}%`;
+            progressFill.style.width = `${pct}%`;
+
+            // Reset UI
+            optionsGrid.innerHTML = '';
+            explanationBox.style.display = 'none';
+            nextBtn.style.display = 'none';
+
+            const keys = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const card = document.createElement('div');
+                card.className = 'option-card';
+                card.innerHTML = `
+                    <div class="option-key">${keys[idx]}</div>
+                    <div class="option-text">${opt}</div>
+                `;
+                card.addEventListener('click', () => handleSelectOption(idx));
+                optionsGrid.appendChild(card);
+            });
+        }
+
+        // HANDLE OPTION SELECT
+        function handleSelectOption(selectedIdx) {
+            clearInterval(timer);
+            const q = quizData[currentQuestion];
+            const cards = optionsGrid.children;
+
+            for (let card of cards) {
+                card.classList.add('disabled');
+            }
+
+            if (selectedIdx === q.correctIndex) {
+                cards[selectedIdx].classList.add('correct');
+                score += 100;
+                scoreVal.textContent = score;
+                playSound('correct');
+            } else {
+                cards[selectedIdx].classList.add('wrong');
+                cards[q.correctIndex].classList.add('correct');
+                playSound('wrong');
+            }
+
+            explanationText.textContent = q.explanation;
+            explanationBox.style.display = 'block';
+            nextBtn.style.display = 'flex';
+        }
+
+        // TIMEOUT HANDLER
+        function handleTimeOut() {
+            const q = quizData[currentQuestion];
+            const cards = optionsGrid.children;
+
+            for (let card of cards) {
+                card.classList.add('disabled');
+            }
+            cards[q.correctIndex].classList.add('correct');
+            playSound('wrong');
+
+            explanationText.textContent = "Hết thời gian! " + q.explanation;
+            explanationBox.style.display = 'block';
+            nextBtn.style.display = 'flex';
+        }
+
+        // NEXT BUTTON
+        nextBtn.addEventListener('click', () => {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        });
+
+        // SHOW RESULT
+        function showResult() {
+            quizScreen.classList.remove('active');
+            resultScreen.classList.add('active');
+
+            const maxScore = quizData.length * 100;
+            finalScoreDisplay.textContent = `${score} / ${maxScore}`;
+
+            if (score === maxScore) {
+                rankBadge.textContent = "🏆 ĐẶC VỤ XUẤT SẮC 4T";
+                rankBadge.style.color = "var(--accent-green)";
+            } else if (score >= maxScore * 0.7) {
+                rankBadge.textContent = "🛡️ ĐẶC VỤ AN TOÀN";
+                rankBadge.style.color = "var(--accent-cyan)";
+            } else {
+                rankBadge.textContent = "⚡ ĐẶC VỤ TẬP SỰ";
+                rankBadge.style.color = "var(--accent-amber)";
+            }
+        }
+
+        // RESTART
+        restartBtn.addEventListener('click', () => {
+            resultScreen.classList.remove('active');
+            welcomeScreen.classList.add('active');
+        });
+    </script>
+</body>
+</html>
